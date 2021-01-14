@@ -14,7 +14,6 @@ body {
 
 .bg-green {
     background-color: #98D7C2;
-    /* background-color: #B6D78E; */
 }
 
 .bg-red {
@@ -24,17 +23,12 @@ body {
 
 .bg-orange {
     background-color: #FFBF80;
-    /* background-color: #FAB282; */
-    /* background-color: #F9CB9C; */
 }
 
 .bg-yellow {
-    /* background-color: #fffc5e; */
     background-color: #FFFF81;
 }
 
 .bg-blue {
     background-color: #9dd5fb;
-    /* background-color: #82CAFA; */
-    /* background-color: #9FC5E8; */
 }

@@ -1,12 +1,12 @@
-let currentTab;
+var currentTab;
 var version = "1.0";
 var results;
 var data_arr;
 var exclude_list = ["ATTD", "MYROOM"];
 
+var test_env = false;
 function getNow() {
-    var test = true;
-    if(test) {
+    if(test_env) {
         return new Date("11 Sep 2020");
     } else {
         return new Date(Date.now());
@@ -205,7 +205,7 @@ $(function(){
         const now = new Date("1 Sep 2020");
         var data = testData
             .filter(entry => !exclude_list.includes(entry.number))
-            // .filter(entry => withinMonth(entry.closeAt))
+            .filter(entry => withinMonth(entry.closeAt))
             .map(entry=> {
                 return {
                     title: entry.number + ": " + entry.title, 
