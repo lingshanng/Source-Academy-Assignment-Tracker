@@ -6,7 +6,7 @@ var exclude_list = ["ATTD", "MYROOM"];
 
 var test_env = false;
 function getNow() {
-    if(test_env) {
+    if (test_env) {
         return new Date("11 Sep 2020");
     } else {
         return new Date(Date.now());
@@ -33,13 +33,13 @@ function allEventHandler(debuggeeId, message, params) {
         }, "Network.searchInResponseBody", {
             "requestId": params.requestId,
             "query": "close"
-        }, function(res) {
+        }, function (res) {
             if (res && res.result && res.result.length > 0) {
                 try {
                     var arr = JSON.parse(res.result[0].lineContent);
-                    data_arr = arr; 
+                    data_arr = arr;
                 }
-                catch(error) {
+                catch (error) {
                     return
                 }
                 // chrome.debugger.detach({tabId: currentTab.id});
@@ -47,8 +47,8 @@ function allEventHandler(debuggeeId, message, params) {
             }
         });
     }
-    
-}   
+
+}
 
 function updateTable(arr) {
     $('#taskTable').bootstrapTable('load', arr);
@@ -56,13 +56,13 @@ function updateTable(arr) {
 
 function formatDate(dt) {
     var d = new Date(Date.parse(dt));
-    d = new Date(d.setMonth(d.getMonth()+1));
+    d = new Date(d.setMonth(d.getMonth() + 1));
     mydate = ('0' + d.getDate()).slice(-2) + "-" + ('0' + (d.getMonth())).slice(-2) + "-" + d.getFullYear();
     mytime = ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2);
     return mydate + " " + mytime; // 09-10-2020 23:59
 }
 
-function compareDates(a,b) {
+function compareDates(a, b) {
     a = formatDate(a).split(' ')[0].split('-').reverse().join("");
     b = formatDate(b).split(' ')[0].split('-').reverse().join("");
     // b is after a
@@ -77,10 +77,10 @@ function withinMonth(d) {
 
 function formatDisplayDate(d) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                        ];
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
     var d_arr = formatDate(d).split('-');
-    d_arr[1] = monthNames[parseInt(d_arr[1])-1];
+    d_arr[1] = monthNames[parseInt(d_arr[1]) - 1];
     return d_arr.join('-'); // 09-Oct-2020 23:59
 }
 
@@ -116,42 +116,42 @@ function rowStyle(row, index) {
     tmr.setDate(today.getDate() + 1);
     if (row.status === 'submitted' || row.status === 'closed') {
         return { classes: 'bg-green' }
-    } else if (compareDates(today, row.openAt)){
-        return { classes: 'bg-blue'}
-    } else if (compareDates(row.closeAt, tmr)){
-        if(row.status === 'attempting') {
-            return { classes: 'bg-orange'}
+    } else if (compareDates(today, row.openAt)) {
+        return { classes: 'bg-blue' }
+    } else if (compareDates(row.closeAt, tmr)) {
+        if (row.status === 'attempting') {
+            return { classes: 'bg-orange' }
         } else {
-            return { classes: 'bg-red'}
+            return { classes: 'bg-red' }
         }
     } else {
-        return { classes: 'bg-yellow'}
+        return { classes: 'bg-yellow' }
     }
 }
 
-$(function(){
+$(function () {
     $('#dateNow').html(formatDisplayDate(getNow()));
 
-    chrome.storage.sync.get('tasks', function(mydata){
-        if(mydata.tasks) {
+    chrome.storage.sync.get('tasks', function (mydata) {
+        if (mydata.tasks) {
             updateTable(mydata.tasks);
         }
-        
+
         // default: show todo only
         $('#todo').click();
     });
-    $('#todo').click(function(){
-        const asc = $('#taskTable').bootstrapTable('getData', {unfiltered: true}).sort((a,b) => (a.closeAt > b.closeAt) ? 1 : ((b.closeAt > a.closeAt) ? -1 : 0));
+    $('#todo').click(function () {
+        const asc = $('#taskTable').bootstrapTable('getData', { unfiltered: true }).sort((a, b) => (a.closeAt > b.closeAt) ? 1 : ((b.closeAt > a.closeAt) ? -1 : 0));
         updateTable(asc);
-        $('#taskTable').bootstrapTable('filterBy', {status: ['attempting', 'not_attempted']});
+        $('#taskTable').bootstrapTable('filterBy', { status: ['attempting', 'not_attempted'] });
         $('#all').removeClass("btn-warning");
         $('#all').addClass("btn-secondary");
         $('#todo').removeClass("btn-secondary");
         $('#todo').addClass("btn-warning");
     });
 
-    $('#all').click(function(){
-        const desc = $('#taskTable').bootstrapTable('getData', {unfiltered: true}).sort((a,b) => (a.closeAt < b.closeAt) ? 1 : ((b.closeAt < a.closeAt) ? -1 : 0));
+    $('#all').click(function () {
+        const desc = $('#taskTable').bootstrapTable('getData', { unfiltered: true }).sort((a, b) => (a.closeAt < b.closeAt) ? 1 : ((b.closeAt < a.closeAt) ? -1 : 0));
         updateTable(desc);
         $('#taskTable').bootstrapTable('filterBy', {});
 
@@ -159,77 +159,77 @@ $(function(){
         $('#todo').addClass("btn-secondary");
         $('#all').removeClass("btn-secondary");
         $('#all').addClass("btn-warning");
-        
+
 
     });
 
-    $('#scrape').click(function(){
-        chrome.tabs.query({url: "https://sourceacademy.nus.edu.sg/academy/*", active: true, currentWindow: true}, function(tabs){
-            if(tabs) {
+    $('#scrape').click(function () {
+        chrome.tabs.query({ url: "https://sourceacademy.nus.edu.sg/academy/*", active: true, currentWindow: true }, function (tabs) {
+            if (tabs) {
                 currentTab = tabs[0];
                 chrome.debugger.attach({ //debug at current tab
                     tabId: currentTab.id
                 }, version, onAttach.bind(null, currentTab.id));
-                chrome.tabs.sendMessage(tabs[0].id, {action: "clickScrape"});
-                
-                
-                setTimeout(function(){ chrome.tabs.reload(currentTab.id); }, 1000);
+                chrome.tabs.sendMessage(tabs[0].id, { action: "clickScrape" });
+
+
+                setTimeout(function () { chrome.tabs.reload(currentTab.id); }, 1000);
                 // setTimeout(function(){ chrome.debugger.detach({tabId: currentTab.id}, null); }, 10000);
 
-                setTimeout(function(){ 
+                setTimeout(function () {
                     var now = getNow()
                     var data = data_arr
                         .filter(entry => !exclude_list.includes(entry.number))
                         .filter(entry => withinMonth(entry.closeAt))
-                        .map(entry=> {
+                        .map(entry => {
                             return {
-                                title: entry.number + ": " + entry.title, 
+                                title: entry.number + ": " + entry.title,
                                 type: entry.type,
                                 status: entry.status !== 'submitted' && compareDates(entry.closeAt, now)
-                                            ? 'closed'
-                                            : entry.status,
+                                    ? 'closed'
+                                    : entry.status,
                                 openAt: entry.openAt,
                                 closeAt: entry.closeAt,
                                 xp: entry.xp + "/" + entry.maxXp,
                             };
                         })
-                        
-                    chrome.storage.sync.set({'tasks': data});
-                 }, 7000);
+
+                    chrome.storage.sync.set({ 'tasks': data });
+                }, 7000);
             }
         });
     });
-    
-    $('#test').click(function(){
+
+    $('#test').click(function () {
         console.log(testData);
         const now = new Date("1 Sep 2020");
         var data = testData
             .filter(entry => !exclude_list.includes(entry.number))
             .filter(entry => withinMonth(entry.closeAt))
-            .map(entry=> {
+            .map(entry => {
                 return {
-                    title: entry.number + ": " + entry.title, 
+                    title: entry.number + ": " + entry.title,
                     type: entry.type,
                     status: entry.status !== 'submitted' && compareDates(entry.closeAt, now)
-                                ? 'closed'
-                                : entry.status,
+                        ? 'closed'
+                        : entry.status,
                     openAt: entry.openAt,
                     closeAt: entry.closeAt,
                     xp: entry.xp + "/" + entry.maxXp,
                 };
             })
-        
-        chrome.storage.sync.set({'tasks': data});
+
+        chrome.storage.sync.set({ 'tasks': data });
     });
 
-    $('#reset').click(function(){
-        chrome.storage.sync.set({'tasks': []});
+    $('#reset').click(function () {
+        chrome.storage.sync.set({ 'tasks': [] });
     })
 });
 
-chrome.storage.onChanged.addListener(function(changes, storageName){
+chrome.storage.onChanged.addListener(function (changes, storageName) {
     console.log('storage changed', changes.tasks.newValue);
-    if($.isArray(changes.tasks.newValue)) { 
+    if ($.isArray(changes.tasks.newValue)) {
         return updateTable(changes.tasks.newValue);
     }
 });

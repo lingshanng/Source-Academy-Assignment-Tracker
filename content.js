@@ -1,8 +1,8 @@
 // chrome.runtime.sendMessage({todo: "showPageAction"});
 
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-    if(request.todo === "clickScrape") {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.todo === "clickScrape") {
         console.log('clicked')
         // setTimeout(function(){ window.location.reload(); }, 3000);
         // window.location.reload()

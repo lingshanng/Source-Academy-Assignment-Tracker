@@ -12,19 +12,23 @@
         "default_icon": "assets/img/icon16.png",
         "default_popup": "popup.html"
     },
-
     "background": {
-        "scripts": ["eventPage.js"],
+        "scripts": [
+            "eventPage.js"
+        ],
         "persistent": false
     },
-
     "content_scripts": [
         {
-            "matches": ["https://sourceacademy.nus.edu.sg/*"],
-            "js": ["content.js", "assets/js/jquery-3.5.1.min.js"]
+            "matches": [
+                "https://sourceacademy.nus.edu.sg/*"
+            ],
+            "js": [
+                "content.js",
+                "assets/js/jquery-3.5.1.min.js"
+            ]
         }
     ],
-
     "permissions": [
         "tabs",
         "https://sourceacademy.nus.edu.sg/*",
